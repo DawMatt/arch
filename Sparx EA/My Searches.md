@@ -2,13 +2,18 @@
 
 # My Searches
 
-Sparx Enterprise Architect includes a model search feature. This includes the ability to save your own searches (My Searches) for future reference.
+Sparx Enterprise Architect (EA) includes a model search feature. This includes the ability to [save your own searches (My Searches)][1] for future reference.
 
 The sections below are example searches that could be of used to Sparx EA users. They have been split into two groupings:
 * Reusable Searches - examples usable without modification
 * Project Examples - project examples that may require some modification
 
 The searches can be installed by pasting the SQL block into the "SQL Editor" within the model search feature. These can be saved for future use.
+
+Tips for creating your own searches:
+* Use the scratchpad's autocomplete feature to find column names within a table. e.g. enter "t_connector." to see a list of columns within the table
+* Use "\<Search Term\>" within the SQL block whereever you want the search term to be replaced
+* Selecting "ea_guid AS CLASSGUID" allows you to open the properties of a search result directly, and to find it on diagrams, via the search result's context menu
 
 # Reusable Searches
 
@@ -203,3 +208,5 @@ where
 order by
        t_package.Name, o1.name;
 ```
+
+[1]: https://sparxsystems.com/enterprise_architect_user_guide/14.0/model_navigation/creating_filters.html

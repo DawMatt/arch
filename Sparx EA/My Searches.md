@@ -15,6 +15,20 @@ Tips for creating your own searches:
 * Use "\<Search Term\>" within the SQL block whereever you want the search term to be replaced
 * Selecting "ea_guid AS CLASSGUID" allows you to open the properties of a search result directly, and to find it on diagrams, via the search result's context menu
 
+## Warning: Searches can be repository type specific 
+
+When using wildcard search parameters you [may need to vary the wildcards based upon your repository type][2]. e.g. For local EAP files the asterix (\*) should find any set of characters, but when using this same search against an SQL Server based repository you will need to replace your asterix wildcards with percent (\%) wildcards characters.
+
+e.g. the "Component Flows (by Source/Sink)" search below was developed for a shared repository, and this line:
+```
+	   and (o2.Name like '%<Search Term>%' or o3.Name like '%<Search Term>%')
+```
+may need to be replaced by this line
+```
+	   and (o2.Name like '*<Search Term>*' or o3.Name like '*<Search Term>*')
+```
+to work in a local EAP file.
+
 # Reusable Searches
 
 ## Component Flows (by Source/Sink)
@@ -210,3 +224,4 @@ order by
 ```
 
 [1]: https://sparxsystems.com/enterprise_architect_user_guide/14.0/model_navigation/creating_filters.html
+[2]: https://www.sparxsystems.com/forums/smf/index.php?topic=38387.0

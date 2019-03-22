@@ -12,7 +12,7 @@ The searches can be installed by pasting the SQL block into the "SQL Editor" wit
 Tips for creating your own searches:
 * Use the scratchpad's autocomplete feature to find column names within a table. e.g. enter "t_connector." to see a list of columns within the table
 * Use "\<Search Term\>" within the SQL block whereever you want the search term to be replaced
-* Add "Package_id in (#Branch#)" to a where clause to restrict the search to the currently highlighted package within Project Browser. Refer to the "Search Current Package" searches for examples
+* Add "Package_id in (#Branch#)" to a where clause to restrict the search to the currently highlighted package within Project Browser. Refer to the "Current Package" searches for examples
 * Selecting "ea_guid AS CLASSGUID" allows you to open the properties of a search result directly, and to find it on diagrams, via the search result's context menu
 * [Inside Enterprise Architect][3] Leanpub eBook has a number of downloadable queries that are worth exploring, and the book contains material useful for query developers
 
@@ -159,7 +159,7 @@ order by
        t_package.Name, o1.name;
 ```
 
-## Search Current Package (by Name)
+## Current Package Elements (by Name)
 
 Searches for elements in the currently selected branch within the Project Browser. Ignores Package and Text elements, but does traverse into sub-packages. The search term is used to restrict the elements by name.
 
@@ -180,6 +180,24 @@ WHERE
   AND o.name not in ('target', 'Merge', 'ActivityFinal', 'ActivityInitial')
   AND o.name like '%<Search Term>%'
 ORDER BY 3,4,5
+```
+
+## Elements (by Property Name)
+
+Searches for any elements within the model. The search term is used to restrict the elements based upon their property names.
+
+Properties include both standard EA properties and tagged values.
+
+Adapted from samples from [Inside Enterprise Architect][3]
+
+```
+SELECT
+  o.ea_guid AS CLASSGUID, o.Object_Type As CLASSTYPE,
+  o.Name, p.property, p.value
+FROM (t_object o
+  INNER JOIN t_objectproperties p
+  ON o.object_id = p.object_id)
+WHERE p.property like '%<Search Term>%'
 ```
 
 # Project Examples

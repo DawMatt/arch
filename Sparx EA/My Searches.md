@@ -14,7 +14,7 @@ Tips for creating your own searches:
 * Use "\<Search Term\>" within the SQL block whereever you want the search term to be replaced
 * Add "Package_id in (#Branch#)" to a where clause to restrict the search to the currently highlighted package within Project Browser. Refer to the "Search Current Package" searches for examples
 * Selecting "ea_guid AS CLASSGUID" allows you to open the properties of a search result directly, and to find it on diagrams, via the search result's context menu
-* "Inside Enterprise Architect" Leanpub eBook[3] has a number of downloadable queries that are worth exploring, and the book contains material useful for query developers
+* [Inside Enterprise Architect][3] Leanpub eBook has a number of downloadable queries that are worth exploring, and the book contains material useful for query developers
 
 ## Warning: Searches can be repository type specific 
 
@@ -163,7 +163,7 @@ order by
 
 Searches for elements in the currently selected branch within the Project Browser. Ignores Package and Text elements, but does traverse into sub-packages. The search term is used to restrict the elements by name.
 
-Adapted from samples from "Inside Enterprise Architect"[3]
+Adapted from samples from [Inside Enterprise Architect][3]
 
 ```
 SELECT

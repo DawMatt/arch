@@ -66,6 +66,29 @@ where
 	   and (o2.object_type = 'Component' and o3.object_type = 'Component')
 ```
 
+## Current Package Objects (by Name)
+
+Searches for objects in the currently selected branch within the Project Browser. Ignores Package and Text objects, but does traverse into sub-packages. The search term is used to restrict the objects by name.
+
+Adapted from samples from [Inside Enterprise Architect][3]
+
+```
+SELECT
+  o.ea_guid As CLASSGUID, o.Object_type As CLASSTYPE,
+  o.name, o.Object_type As Type, o.Stereotype, o.Author, pkg.name as PackageName,
+  o.modifiedDate As Modified, o.note As [Notes]
+FROM
+  t_object o, t_package pkg
+WHERE
+  pkg.Package_id in (#Branch#)
+  AND o.Package_ID = pkg.package_id
+  AND o.Object_Type NOT IN ('Package', 'Text')
+  AND o.name <> ' '
+  AND o.name not in ('target', 'Merge', 'ActivityFinal', 'ActivityInitial')
+  AND o.name like '#WC#<Search Term>#WC#'
+ORDER BY 3,4,5
+```
+
 ## Diagrams (by Name)
 
 Searches for any diagrams within the model. The search term is used to restrict the diagrams by name.
@@ -86,68 +109,6 @@ FROM t_diagram d
 WHERE 
   d.name like '#WC#<Search Term>#WC#' 
 ORDER BY 3 
-```
-
-## Object Flows (by Name)
-
-
-Searches for Information Flow relationships between elements. The search term is used to restrict the relationships by name.
-
-```
-select 
-	   c1.ea_guid AS CLASSGUID, 
-	   c1.Connector_Type AS CLASSTYPE, 
-	   't_connector' as CLASSTABLE,
-       c1.Name as "FlowName",
-       c1.styleex as "FlowAlias",
-       c1.Stereotype as "FlowStereotype",
-	   c1.Connector_Type as "FlowType",
-       o2.Name as "FlowSource",
-       o3.Name as "FlowSink",
-       '"' + c1.Notes + '"' as "FlowNotes",
-       c1.connector_id as "FlowConnectorID",
-       o2.object_id as "SourceObjectId",
-       o3.object_id as "SinkObjectId"
-
-       
-from t_connector c1, t_object o2, t_object o3
-where 
-           (c1.Connector_Type = 'InformationFlow')
-	   and (c1.Name like '#WC#<Search Term>#WC#')
-       and (o2.Object_ID = c1.start_object_id) 
-       and (o3.Object_ID = c1.end_object_id) 
-```
-
-## Object Flows (by Source/Sink)
-
-Searches for Information Flow relationships between elements. The search term is used to restrict the sink/source elements.
-
-```
-select 
-       c1.ea_guid AS CLASSGUID, 
-       c1.Connector_Type AS CLASSTYPE, 
-       't_connector' as CLASSTABLE,
-       c1.Name as "FlowName",
-       c1.styleex as "FlowAlias",
-       c1.Stereotype as "FlowStereotype",
-	   c1.Connector_Type as "FlowType",
-       o2.Name as "FlowSource",
-       o3.Name as "FlowSink",
-       '"' + c1.Notes + '"' as "FlowNotes",
-       o2.object_type as "SourceObjectType",
-       o3.object_type as "SinkObjectType",
-       c1.connector_id as "FlowConnectorID",
-       o2.object_id as "SourceObjectId",
-       o3.object_id as "SinkObjectId"
-
-       
-from t_connector c1, t_object o2, t_object o3
-where 
-           (c1.Connector_Type = 'InformationFlow')
-       and (o2.Object_ID = c1.start_object_id) 
-       and (o3.Object_ID = c1.end_object_id) 
-	   and (o2.Name like '#WC#<Search Term>#WC#' or o3.Name like '#WC#<Search Term>#WC#')
-	   and not(o2.object_type = 'UMLDiagram' or o3.object_type = 'UMLDiagram')
 ```
 
 ## Flows
@@ -183,32 +144,9 @@ order by
        t_package.Name, o1.name;
 ```
 
-## Current Package Elements (by Name)
+## Objects (by Property Name)
 
-Searches for elements in the currently selected branch within the Project Browser. Ignores Package and Text elements, but does traverse into sub-packages. The search term is used to restrict the elements by name.
-
-Adapted from samples from [Inside Enterprise Architect][3]
-
-```
-SELECT
-  o.ea_guid As CLASSGUID, o.Object_type As CLASSTYPE,
-  o.name, o.Object_type As Type, o.Stereotype, o.Author, pkg.name as PackageName,
-  o.modifiedDate As Modified, o.note As [Notes]
-FROM
-  t_object o, t_package pkg
-WHERE
-  pkg.Package_id in (#Branch#)
-  AND o.Package_ID = pkg.package_id
-  AND o.Object_Type NOT IN ('Package', 'Text')
-  AND o.name <> ' '
-  AND o.name not in ('target', 'Merge', 'ActivityFinal', 'ActivityInitial')
-  AND o.name like '#WC#<Search Term>#WC#'
-ORDER BY 3,4,5
-```
-
-## Elements (by Property Name)
-
-Searches for any elements within the model. The search term is used to restrict the elements based upon their property names.
+Searches for any objects within the model. The search term is used to restrict the objects based upon their property names.
 
 Properties include both standard EA properties and tagged values.
 
@@ -224,13 +162,75 @@ FROM (t_object o
 WHERE p.property like '#WC#<Search Term>#WC#'
 ```
 
+## Object Flows (by Name)
+
+
+Searches for Information Flow relationships between objects. The search term is used to restrict the relationships by name.
+
+```
+select 
+	   c1.ea_guid AS CLASSGUID, 
+	   c1.Connector_Type AS CLASSTYPE, 
+	   't_connector' as CLASSTABLE,
+       c1.Name as "FlowName",
+       c1.styleex as "FlowAlias",
+       c1.Stereotype as "FlowStereotype",
+	   c1.Connector_Type as "FlowType",
+       o2.Name as "FlowSource",
+       o3.Name as "FlowSink",
+       '"' + c1.Notes + '"' as "FlowNotes",
+       c1.connector_id as "FlowConnectorID",
+       o2.object_id as "SourceObjectId",
+       o3.object_id as "SinkObjectId"
+
+       
+from t_connector c1, t_object o2, t_object o3
+where 
+           (c1.Connector_Type = 'InformationFlow')
+	   and (c1.Name like '#WC#<Search Term>#WC#')
+       and (o2.Object_ID = c1.start_object_id) 
+       and (o3.Object_ID = c1.end_object_id) 
+```
+
+## Object Flows (by Source/Sink)
+
+Searches for Information Flow relationships between objects. The search term is used to restrict the sink/source objects.
+
+```
+select 
+       c1.ea_guid AS CLASSGUID, 
+       c1.Connector_Type AS CLASSTYPE, 
+       't_connector' as CLASSTABLE,
+       c1.Name as "FlowName",
+       c1.styleex as "FlowAlias",
+       c1.Stereotype as "FlowStereotype",
+	   c1.Connector_Type as "FlowType",
+       o2.Name as "FlowSource",
+       o3.Name as "FlowSink",
+       '"' + c1.Notes + '"' as "FlowNotes",
+       o2.object_type as "SourceObjectType",
+       o3.object_type as "SinkObjectType",
+       c1.connector_id as "FlowConnectorID",
+       o2.object_id as "SourceObjectId",
+       o3.object_id as "SinkObjectId"
+
+       
+from t_connector c1, t_object o2, t_object o3
+where 
+           (c1.Connector_Type = 'InformationFlow')
+       and (o2.Object_ID = c1.start_object_id) 
+       and (o3.Object_ID = c1.end_object_id) 
+	   and (o2.Name like '#WC#<Search Term>#WC#' or o3.Name like '#WC#<Search Term>#WC#')
+	   and not(o2.object_type = 'UMLDiagram' or o3.object_type = 'UMLDiagram')
+```
+
 # Project Examples
 
 The following examples are sourced from project models and make use of stereotypes or naming schemes specific to those models. They will require some modification before reuse in another context.
 
 ## Diagram Contents (SUC and INT)
 
-Searches for elements displayed on diagrams, where the diagrams are named using predefined naming schemes.
+Searches for objects displayed on diagrams, where the diagrams are named using predefined naming schemes.
 
 ```
 select 
@@ -253,9 +253,9 @@ and d2.Object_ID = o.Object_ID
 ;
 ```
 
-## Relationships (with Associated Element)
+## Relationships (with Associated Object)
 
-Searches for relationships between model elements, where the relationship has an element with a specific stereotype associated to the relationship.
+Searches for relationships between model objects, where the relationship has an object with a specific stereotype associated to the relationship.
 
 ```
 select 

@@ -16,19 +16,21 @@ Tips for creating your own searches:
 * Selecting "ea_guid AS CLASSGUID" allows you to open the properties of a search result directly, and to find it on diagrams, via the search result's context menu
 * [Inside Enterprise Architect][3] Leanpub eBook has a number of downloadable queries that are worth exploring, and the book contains material useful for query developers
 
-## Warning: Searches can be repository type specific 
+## Warning: Use \#WC\# to make searches repository database type agnostic 
 
-When using wildcard search parameters you [may need to vary the wildcards based upon your repository type][2]. e.g. For local EAP files the asterix (\*) should find any set of characters, but when using this same search against an SQL Server based repository you will need to replace your asterix wildcards with percent (\%) wildcards characters.
+Wildcard search parameters [may need to vary based upon your repository database type][2]. e.g. For local EAP files the asterix (\*) should find any set of characters, but when using this same search against an SQL Server based repository you will need to replace your asterix wildcards with percent (\%) wildcards characters.
 
-e.g. the "Component Flows (by Source/Sink)" search below was developed for a shared repository, and this line:
+You can avoid this issue using the [\#WC\# macro][4]. It will return the appropriate wildcard character for the current database type.
+
+e.g. the "Component Flows (by Source/Sink)" search below was originally developed for a shared repository, and this line:
 ```
 	   and (o2.Name like '%<Search Term>%' or o3.Name like '%<Search Term>%')
 ```
-may need to be replaced by this line
+has been replaced by this line
 ```
-	   and (o2.Name like '*<Search Term>*' or o3.Name like '*<Search Term>*')
+	   and (o2.Name like '#WC#<Search Term>#WC#' or o3.Name like '#WC#<Search Term>#WC#')
 ```
-to work in a local EAP file.
+to make it database type agnostic.
 
 # Reusable Searches
 
@@ -60,7 +62,7 @@ where
            (c1.Connector_Type = 'InformationFlow')
        and (o2.Object_ID = c1.start_object_id) 
        and (o3.Object_ID = c1.end_object_id) 
-	   and (o2.Name like '%<Search Term>%' or o3.Name like '%<Search Term>%')
+	   and (o2.Name like '#WC#<Search Term>#WC#' or o3.Name like '#WC#<Search Term>#WC#')
 	   and (o2.object_type = 'Component' and o3.object_type = 'Component')
 ```
 
@@ -89,7 +91,7 @@ select
 from t_connector c1, t_object o2, t_object o3
 where 
            (c1.Connector_Type = 'InformationFlow')
-	   and (c1.Name like '%<Search Term>%')
+	   and (c1.Name like '#WC#<Search Term>#WC#')
        and (o2.Object_ID = c1.start_object_id) 
        and (o3.Object_ID = c1.end_object_id) 
 ```
@@ -122,7 +124,7 @@ where
            (c1.Connector_Type = 'InformationFlow')
        and (o2.Object_ID = c1.start_object_id) 
        and (o3.Object_ID = c1.end_object_id) 
-	   and (o2.Name like '%<Search Term>%' or o3.Name like '%<Search Term>%')
+	   and (o2.Name like '#WC#<Search Term>#WC#' or o3.Name like '#WC#<Search Term>#WC#')
 	   and not(o2.object_type = 'UMLDiagram' or o3.object_type = 'UMLDiagram')
 ```
 
@@ -178,7 +180,7 @@ WHERE
   AND o.Object_Type NOT IN ('Package', 'Text')
   AND o.name <> ' '
   AND o.name not in ('target', 'Merge', 'ActivityFinal', 'ActivityInitial')
-  AND o.name like '%<Search Term>%'
+  AND o.name like '#WC#<Search Term>#WC#'
 ORDER BY 3,4,5
 ```
 
@@ -197,7 +199,7 @@ SELECT
 FROM (t_object o
   INNER JOIN t_objectproperties p
   ON o.object_id = p.object_id)
-WHERE p.property like '%<Search Term>%'
+WHERE p.property like '#WC#<Search Term>#WC#'
 ```
 
 # Project Examples
@@ -223,7 +225,7 @@ from
 t_diagram d, t_diagramobjects d2, t_object o
 
 where 
-(d.name like '%-SUC-%' OR d.name like '% INT%')
+(d.name like '#WC#-SUC-#WC#' OR d.name like '#WC# INT#WC#')
 and d.Diagram_ID = d2.Diagram_ID
 and d2.Object_ID = o.Object_ID
 ;
@@ -268,3 +270,4 @@ order by
 [1]: https://sparxsystems.com/enterprise_architect_user_guide/14.0/model_navigation/creating_filters.html
 [2]: https://www.sparxsystems.com/forums/smf/index.php?topic=38387.0
 [3]: https://leanpub.com/InsideEA/read
+[4]: https://sparxsystems.com/enterprise_architect_user_guide/8.0/navigate_search_and_trace/creating_filters.html

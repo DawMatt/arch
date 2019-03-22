@@ -66,6 +66,28 @@ where
 	   and (o2.object_type = 'Component' and o3.object_type = 'Component')
 ```
 
+## Diagrams (by Name)
+
+Searches for any diagrams within the model. The search term is used to restrict the diagrams by name.
+
+Adapted from samples from [Inside Enterprise Architect][3]
+
+```
+SELECT 
+  d.ea_guid As CLASSGUID, 
+  d.diagram_type As CLASSTYPE, 
+  d.name As  Diagram, 
+  d.diagram_type As Type, 
+  d.stereotype As Stereotype,
+  d.Author,
+  d.modifiedDate As Modified, 
+  d.notes As [Notes] 
+FROM t_diagram d 
+WHERE 
+  d.name like '#WC#<Search Term>#WC#' 
+ORDER BY 3 
+```
+
 ## Object Flows (by Name)
 
 

@@ -1,5 +1,4 @@
 
-
 # My Searches
 
 Sparx Enterprise Architect (EA) includes a model search feature. This includes the ability to [save your own searches (My Searches)][1] for future reference.
@@ -13,7 +12,9 @@ The searches can be installed by pasting the SQL block into the "SQL Editor" wit
 Tips for creating your own searches:
 * Use the scratchpad's autocomplete feature to find column names within a table. e.g. enter "t_connector." to see a list of columns within the table
 * Use "\<Search Term\>" within the SQL block whereever you want the search term to be replaced
+* Add "Package_id in (#Branch#)" to a where clause to restrict the search to the currently highlighted package within Project Browser. Refer to the "Search Current Package" searches for examples
 * Selecting "ea_guid AS CLASSGUID" allows you to open the properties of a search result directly, and to find it on diagrams, via the search result's context menu
+* "Inside Enterprise Architect" Leanpub eBook[3] has a number of downloadable queries that are worth exploring, and the book contains material useful for query developers
 
 ## Warning: Searches can be repository type specific 
 
@@ -158,6 +159,29 @@ order by
        t_package.Name, o1.name;
 ```
 
+## Search Current Package (by Name)
+
+Searches for elements in the currently selected branch within the Project Browser. Ignores Package and Text elements, but does traverse into sub-packages. The search term is used to restrict the elements by name.
+
+Adapted from samples from "Inside Enterprise Architect"[3]
+
+```
+SELECT
+  o.ea_guid As CLASSGUID, o.Object_type As CLASSTYPE,
+  o.name, o.Object_type As Type, o.Stereotype, o.Author, pkg.name as PackageName,
+  o.modifiedDate As Modified, o.note As [Notes]
+FROM
+  t_object o, t_package pkg
+WHERE
+  pkg.Package_id in (#Branch#)
+  AND o.Package_ID = pkg.package_id
+  AND o.Object_Type NOT IN ('Package', 'Text')
+  AND o.name <> ' '
+  AND o.name not in ('target', 'Merge', 'ActivityFinal', 'ActivityInitial')
+  AND o.name like '%<Search Term>%'
+ORDER BY 3,4,5
+```
+
 # Project Examples
 
 The following examples are sourced from project models and make use of stereotypes or naming schemes specific to those models. They will require some modification before reuse in another context.
@@ -225,3 +249,4 @@ order by
 
 [1]: https://sparxsystems.com/enterprise_architect_user_guide/14.0/model_navigation/creating_filters.html
 [2]: https://www.sparxsystems.com/forums/smf/index.php?topic=38387.0
+[3]: https://leanpub.com/InsideEA/read

@@ -83,8 +83,8 @@ WHERE
   pkg.Package_id in (#Branch#)
   AND o.Package_ID = pkg.package_id
   AND o.Object_Type NOT IN ('Package', 'Text')
-  AND o.name <> ' '
-  AND o.name not in ('target', 'Merge', 'ActivityFinal', 'ActivityInitial')
+  AND o.name <> ''
+  AND o.name not in ('Merge', 'ActivityFinal', 'ActivityInitial')
   AND o.name like '#WC#<Search Term>#WC#'
 ORDER BY 3,4,5
 ```

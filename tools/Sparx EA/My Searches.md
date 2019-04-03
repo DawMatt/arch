@@ -11,14 +11,14 @@ The searches can be installed by pasting the SQL block into the "SQL Editor" wit
 
 Tips for creating your own searches:
 * Use the scratchpad's autocomplete feature to find column names within a table. e.g. enter "t_connector." to see a list of columns within the table
-* Use "\<Search Term\>" within the SQL block whereever you want the search term to be replaced
+* Use "\<Search Term\>" within the SQL block wherever you want the search term to be replaced
 * Add "Package_id in (#Branch#)" to a where clause to restrict the search to the currently highlighted package within Project Browser. Refer to the "Current Package" searches for examples
 * Selecting "ea_guid AS CLASSGUID" allows you to open the properties of a search result directly, and to find it on diagrams, via the search result's context menu
 * [Inside Enterprise Architect][3] Leanpub eBook has a number of downloadable queries that are worth exploring, and the book contains material useful for query developers
 
 ## Warning: Use \#WC\# to make searches repository database type agnostic 
 
-Wildcard search parameters [may need to vary based upon your repository database type][2]. e.g. For local EAP files the asterix (\*) should find any set of characters, but when using this same search against an SQL Server based repository you will need to replace your asterix wildcards with percent (\%) wildcards characters.
+Wildcard search parameters [may need to vary based upon your repository database type][2]. e.g. For local EAP files the asterisk (\*) should find any set of characters, but when using this same search against an SQL Server based repository you will need to replace your asterisk wildcards with percent (\%) wildcards characters.
 
 You can avoid this issue using the [\#WC\# macro][4]. It will return the appropriate wildcard character for the current database type.
 

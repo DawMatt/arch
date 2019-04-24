@@ -36,4 +36,4 @@ A: Your standard username, and a personal access token instead of the password. 
 
 A: Use the netrc file. For more detail see:
 
-* [](https://stackoverflow.com/questions/6031214/git-how-to-use-netrc-file-on-windows-to-save-user-and-password)
+* [Git - How to use .netrc file on Windows to save user and password](https://stackoverflow.com/questions/6031214/git-how-to-use-netrc-file-on-windows-to-save-user-and-password)

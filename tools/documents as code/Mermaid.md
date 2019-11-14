@@ -4,6 +4,9 @@
 
 [Syntax Reference](https://mermaidjs.github.io/sequenceDiagram.html)
 
+> [NOTE]
+> Best viewed with Markdown Preview Extension's Forest theme
+
 ```mermaid
 sequenceDiagram
     participant Alice
